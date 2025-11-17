@@ -30,17 +30,22 @@ export async function fetchRedditPosts(limit: number = 10): Promise<NewsItem[]> 
 
   for (const subreddit of SUBREDDITS) {
     try {
+      // Use old.reddit.com which is less likely to block server requests
       const response = await fetch(
-        `https://www.reddit.com/r/${subreddit}/hot.json?limit=${Math.ceil(limit / SUBREDDITS.length)}`,
+        `https://old.reddit.com/r/${subreddit}/hot.json?limit=${Math.ceil(limit / SUBREDDITS.length)}`,
         {
           headers: {
-            'User-Agent': 'theaihomepage.com news aggregator'
+            'User-Agent': 'Mozilla/5.0 (compatible; theaihomepage.com/1.0; +https://theaihomepage.com)',
+            'Accept': 'application/json',
           },
           next: { revalidate: 300 } // Cache for 5 minutes
         }
       );
 
-      if (!response.ok) continue;
+      if (!response.ok) {
+        console.error(`Reddit API error for r/${subreddit}: ${response.status} ${response.statusText}`);
+        continue;
+      }
 
       const data = await response.json();
       const posts: RedditPost[] = data.data.children;
