@@ -1,4 +1,5 @@
 import { NewsItem } from '../types';
+import Parser from 'rss-parser';
 
 const SUBREDDITS = [
   'artificial',
@@ -9,62 +10,82 @@ const SUBREDDITS = [
   'StableDiffusion'
 ];
 
-interface RedditPost {
-  data: {
-    id: string;
-    title: string;
-    url: string;
-    author: string;
-    created_utc: number;
-    selftext?: string;
-    score: number;
-    num_comments: number;
-    thumbnail?: string;
-    subreddit: string;
-    permalink: string;
-  };
-}
+const parser = new Parser({
+  customFields: {
+    item: [
+      ['author', 'author'],
+      ['link', 'link'],
+    ]
+  }
+});
 
 export async function fetchRedditPosts(limit: number = 10): Promise<NewsItem[]> {
   const allPosts: NewsItem[] = [];
+  const postsPerSubreddit = Math.ceil(limit / SUBREDDITS.length);
 
   for (const subreddit of SUBREDDITS) {
     try {
-      // Use old.reddit.com which is less likely to block server requests
-      const response = await fetch(
-        `https://old.reddit.com/r/${subreddit}/hot.json?limit=${Math.ceil(limit / SUBREDDITS.length)}`,
-        {
-          headers: {
-            'User-Agent': 'Mozilla/5.0 (compatible; theaihomepage.com/1.0; +https://theaihomepage.com)',
-            'Accept': 'application/json',
-          },
-          next: { revalidate: 300 } // Cache for 5 minutes
-        }
-      );
+      // Use Reddit RSS feeds - no authentication required and less likely to be blocked
+      const rssUrl = `https://www.reddit.com/r/${subreddit}/hot.rss?limit=${postsPerSubreddit}`;
+      
+      const response = await fetch(rssUrl, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (compatible; theaihomepage.com/1.0)',
+        },
+        next: { revalidate: 300 }, // Cache for 5 minutes
+      });
 
       if (!response.ok) {
-        console.error(`Reddit API error for r/${subreddit}: ${response.status} ${response.statusText}`);
+        console.error(`Reddit RSS error for r/${subreddit}: ${response.status} ${response.statusText}`);
         continue;
       }
 
-      const data = await response.json();
-      const posts: RedditPost[] = data.data.children;
+      const rssText = await response.text();
+      const feed = await parser.parseString(rssText);
 
-      const newsItems = posts.map((post): NewsItem => ({
-        id: `reddit-${post.data.id}`,
-        title: post.data.title,
-        url: post.data.url.startsWith('/r/')
-          ? `https://www.reddit.com${post.data.permalink}`
-          : post.data.url,
-        source: 'reddit',
-        sourceDetail: `r/${subreddit}`,
-        publishedAt: new Date(post.data.created_utc * 1000),
-        author: post.data.author,
-        excerpt: post.data.selftext?.substring(0, 200),
-        score: post.data.score,
-        commentsCount: post.data.num_comments,
-        thumbnail: post.data.thumbnail?.startsWith('http') ? post.data.thumbnail : undefined
-      }));
+      const newsItems = feed.items.map((item): NewsItem => {
+        // Extract Reddit post ID from the link
+        const postIdMatch = item.link?.match(/comments\/([^\/]+)/);
+        const postId = postIdMatch ? postIdMatch[1] : item.guid || Math.random().toString();
+
+        // Extract score and comments from the content
+        const scoreMatch = item.content?.match(/(\d+) points?/);
+        const commentsMatch = item.content?.match(/(\d+) comments?/);
+        
+        const score = scoreMatch ? parseInt(scoreMatch[1], 10) : 0;
+        const commentsCount = commentsMatch ? parseInt(commentsMatch[1], 10) : 0;
+
+        // Extract username from author string (format: "/u/username")
+        const authorMatch = item.creator?.match(/\/u\/(.+)/);
+        const author = authorMatch ? authorMatch[1] : (item.creator || 'unknown');
+
+        // Extract thumbnail from content HTML if available
+        let thumbnail: string | undefined;
+        const thumbnailMatch = item.content?.match(/<img src="([^"]+)"/);
+        if (thumbnailMatch) {
+          thumbnail = thumbnailMatch[1];
+        }
+
+        // Extract excerpt from content (remove HTML tags)
+        let excerpt: string | undefined;
+        if (item.contentSnippet) {
+          excerpt = item.contentSnippet.replace(/<[^>]*>/g, '').substring(0, 200);
+        }
+
+        return {
+          id: `reddit-${postId}`,
+          title: item.title || '',
+          url: item.link || '',
+          source: 'reddit',
+          sourceDetail: `r/${subreddit}`,
+          publishedAt: item.pubDate ? new Date(item.pubDate) : new Date(),
+          author,
+          excerpt,
+          score,
+          commentsCount,
+          thumbnail: thumbnail?.startsWith('http') ? thumbnail : undefined
+        };
+      });
 
       allPosts.push(...newsItems);
     } catch (error) {

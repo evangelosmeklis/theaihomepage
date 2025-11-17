@@ -22,8 +22,9 @@ A modern AI news aggregator that pulls the latest articles from multiple sources
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
 - **Data Fetching**:
-  - Reddit JSON API
-  - RSS feeds (TechCrunch, Startupper.gr)
+  - Reddit RSS feeds
+  - TechCrunch RSS feed
+  - Startupper.gr RSS feed
   - Hacker News API
 
 ## Getting Started
@@ -56,7 +57,9 @@ npm start
 
 1. Push your code to GitHub
 2. Import the project in [Vercel](https://vercel.com)
-3. Deploy with one click
+3. Deploy with one click - no environment variables needed!
+
+> ✅ **Note**: This app uses Reddit's RSS feeds which don't require authentication and work seamlessly on Vercel.
 
 ### Other Platforms
 
