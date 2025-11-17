@@ -67,15 +67,42 @@ export default function Home() {
     
     filtered = filtered.filter(item => new Date(item.publishedAt) >= oneDayAgo);
 
-    // Sort
+    // Separate Reddit and non-Reddit posts
+    const redditPosts = filtered.filter(item => item.source === 'reddit');
+    const otherPosts = filtered.filter(item => item.source !== 'reddit');
+
+    // Limit Reddit posts to max 10, keeping the best ones based on sort criteria
+    let limitedRedditPosts = redditPosts;
+    if (redditPosts.length > 10) {
+      // Sort Reddit posts by current criteria to get the best ones
+      if (sortBy === 'newest') {
+        limitedRedditPosts = [...redditPosts]
+          .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+          .slice(0, 10);
+      } else if (sortBy === 'top') {
+        limitedRedditPosts = [...redditPosts]
+          .sort((a, b) => {
+            const scoreA = a.score || 0;
+            const scoreB = b.score || 0;
+            if (scoreA !== scoreB) return scoreB - scoreA;
+            return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
+          })
+          .slice(0, 10);
+      }
+    }
+
+    // Combine limited Reddit with all other posts
+    filtered = [...limitedRedditPosts, ...otherPosts];
+
+    // Sort the combined list
     if (sortBy === 'newest') {
       // Sort by date, newest first (hot posts of today)
-      filtered = [...filtered].sort((a, b) =>
+      filtered = filtered.sort((a, b) =>
         new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
       );
     } else if (sortBy === 'top') {
       // Sort by score, highest first (top posts of today)
-      filtered = [...filtered].sort((a, b) => {
+      filtered = filtered.sort((a, b) => {
         const scoreA = a.score || 0;
         const scoreB = b.score || 0;
         
