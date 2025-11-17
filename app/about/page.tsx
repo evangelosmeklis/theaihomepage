@@ -6,10 +6,10 @@ export default function About() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors flex flex-col">
       <Navigation />
 
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-1">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-8">about</h1>
+      <main className="max-w-3xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-12 flex-1">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6 sm:mb-8">about</h1>
 
-        <div className="text-gray-600 dark:text-gray-300 space-y-6 leading-relaxed">
+        <div className="text-sm sm:text-base text-gray-600 dark:text-gray-300 space-y-4 sm:space-y-6 leading-relaxed">
           <p>
             the ai homepage is a news aggregator that brings you the latest AI news from multiple trusted sources,
             all in one clean, easy-to-browse interface. instead of checking multiple websites and forums, you get

@@ -22,10 +22,10 @@ const sortOptions = [
 
 export function SourceFilter({ selectedSources, onToggleSource, sortBy, onSortChange }: SourceFilterProps) {
   return (
-    <div className="flex flex-wrap items-center gap-4 text-sm">
+    <div className="flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center gap-3 sm:gap-4 text-xs sm:text-sm">
       {/* Source Filter */}
-      <div className="flex items-center gap-1">
-        <span className="text-gray-500 dark:text-gray-400 mr-2">filter:</span>
+      <div className="flex items-center gap-1 flex-wrap">
+        <span className="text-gray-500 dark:text-gray-400 mr-1 sm:mr-2">filter:</span>
         {sources.map((source, index) => {
           const isSelected = source.id === 'all'
             ? selectedSources.size === 0
@@ -35,7 +35,7 @@ export function SourceFilter({ selectedSources, onToggleSource, sortBy, onSortCh
             <span key={source.id} className="flex items-center">
               <button
                 onClick={() => onToggleSource(source.id)}
-                className={`px-2 py-1 rounded transition-all duration-200 ${
+                className={`px-2 py-1 rounded transition-all duration-200 touch-manipulation ${
                   isSelected
                     ? 'text-gray-900 dark:text-gray-100 font-medium underline underline-offset-4 scale-110'
                     : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:scale-105'
@@ -44,7 +44,7 @@ export function SourceFilter({ selectedSources, onToggleSource, sortBy, onSortCh
                 {source.label}
               </button>
               {index < sources.length - 1 && (
-                <span className="text-gray-300 dark:text-gray-600 mx-1">/</span>
+                <span className="text-gray-300 dark:text-gray-600 mx-0.5 sm:mx-1">/</span>
               )}
             </span>
           );
@@ -52,16 +52,16 @@ export function SourceFilter({ selectedSources, onToggleSource, sortBy, onSortCh
       </div>
 
       {/* Divider */}
-      <span className="text-gray-300 dark:text-gray-600">|</span>
+      <span className="text-gray-300 dark:text-gray-600 hidden sm:inline">|</span>
 
       {/* Sort Filter */}
       <div className="flex items-center gap-1">
-        <span className="text-gray-500 dark:text-gray-400 mr-2">sort:</span>
+        <span className="text-gray-500 dark:text-gray-400 mr-1 sm:mr-2">sort:</span>
         {sortOptions.map((option, index) => (
           <span key={option.id} className="flex items-center">
             <button
               onClick={() => onSortChange(option.id as 'newest' | 'top')}
-              className={`px-2 py-1 rounded transition-all duration-200 ${
+              className={`px-2 py-1 rounded transition-all duration-200 touch-manipulation ${
                 sortBy === option.id
                   ? 'text-gray-900 dark:text-gray-100 font-medium underline underline-offset-4 scale-110'
                   : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:scale-105'
@@ -70,7 +70,7 @@ export function SourceFilter({ selectedSources, onToggleSource, sortBy, onSortCh
               {option.label}
             </button>
             {index < sortOptions.length - 1 && (
-              <span className="text-gray-300 dark:text-gray-600 mx-1">/</span>
+              <span className="text-gray-300 dark:text-gray-600 mx-0.5 sm:mx-1">/</span>
             )}
           </span>
         ))}

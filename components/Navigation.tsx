@@ -11,16 +11,16 @@ export function Navigation() {
   return (
     <nav className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Logo */}
-          <div className="flex-1">
-            <Link href="/" className="flex items-center gap-3 hover:scale-105 transition-transform duration-300">
-              <img src="/logo.png" alt="Logo" className="w-10 h-10" />
-              <div>
-                <div className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          <div className="flex-1 min-w-0">
+            <Link href="/" className="flex items-center gap-2 sm:gap-3 hover:scale-105 transition-transform duration-300">
+              <img src="/logo.png" alt="Logo" className="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0" />
+              <div className="min-w-0">
+                <div className="text-base sm:text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent truncate">
                   the ai homepage
                 </div>
-                <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 hidden sm:block">
                   a piece of AI news history
                 </div>
               </div>
@@ -28,10 +28,10 @@ export function Navigation() {
           </div>
 
           {/* Centered Navigation */}
-          <div className="flex-1 flex justify-center gap-12">
+          <div className="flex-1 flex justify-center gap-6 sm:gap-12">
             <Link
               href="/"
-              className={`text-base font-medium transition-colors ${
+              className={`text-sm sm:text-base font-medium transition-colors ${
                 pathname === '/'
                   ? 'text-gray-900 dark:text-gray-100'
                   : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'
@@ -41,7 +41,7 @@ export function Navigation() {
             </Link>
             <Link
               href="/about"
-              className={`text-base font-medium transition-colors ${
+              className={`text-sm sm:text-base font-medium transition-colors ${
                 pathname === '/about'
                   ? 'text-gray-900 dark:text-gray-100'
                   : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'
@@ -55,7 +55,7 @@ export function Navigation() {
           <div className="flex-1 flex justify-end">
             <button
               onClick={toggle}
-              className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"
+              className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors touch-manipulation"
               aria-label="Toggle dark mode"
             >
               {isDark ? (

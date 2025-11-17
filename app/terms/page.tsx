@@ -6,18 +6,18 @@ export default function Terms() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
       <Navigation />
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+      <main className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-12">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 sm:p-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
             terms of service
           </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">
+          <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mb-6 sm:mb-8">
             last updated: {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
           </p>
 
-          <div className="space-y-6 text-gray-700 dark:text-gray-300">
+          <div className="space-y-4 sm:space-y-6 text-sm sm:text-base text-gray-700 dark:text-gray-300">
             <section>
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-3">
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">
                 acceptance of terms
               </h2>
               <p>
@@ -26,7 +26,7 @@ export default function Terms() {
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-3">
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">
                 description of service
               </h2>
               <p>
@@ -35,7 +35,7 @@ export default function Terms() {
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-3">
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">
                 use of service
               </h2>
               <p className="mb-3">
@@ -51,7 +51,7 @@ export default function Terms() {
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-3">
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">
                 third-party content
               </h2>
               <p>
@@ -60,7 +60,7 @@ export default function Terms() {
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-3">
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">
                 intellectual property
               </h2>
               <p>
@@ -69,7 +69,7 @@ export default function Terms() {
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-3">
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">
                 disclaimer of warranties
               </h2>
               <p>
@@ -78,7 +78,7 @@ export default function Terms() {
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-3">
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">
                 limitation of liability
               </h2>
               <p>
@@ -87,7 +87,7 @@ export default function Terms() {
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-3">
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">
                 external links
               </h2>
               <p>
@@ -96,7 +96,7 @@ export default function Terms() {
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-3">
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">
                 content removal
               </h2>
               <p>
@@ -112,7 +112,7 @@ export default function Terms() {
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-3">
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">
                 modifications to service
               </h2>
               <p>
@@ -121,7 +121,7 @@ export default function Terms() {
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-3">
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">
                 changes to terms
               </h2>
               <p>
@@ -130,7 +130,7 @@ export default function Terms() {
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-3">
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">
                 governing law
               </h2>
               <p>
@@ -139,7 +139,7 @@ export default function Terms() {
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-3">
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">
                 contact information
               </h2>
               <p>

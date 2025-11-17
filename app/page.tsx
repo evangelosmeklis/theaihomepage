@@ -87,8 +87,8 @@ export default function Home() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors flex flex-col">
       <Navigation />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-1">
-        <div className="mb-8">
+      <main className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-12 flex-1">
+        <div className="mb-6 sm:mb-8">
           <SourceFilter
             selectedSources={selectedSources}
             onToggleSource={handleToggleSource}
@@ -124,7 +124,7 @@ export default function Home() {
                 No articles found for the selected filters.
               </div>
             )}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {filteredNews.map((item) => (
                 <NewsCard key={item.id} item={item} />
               ))}
