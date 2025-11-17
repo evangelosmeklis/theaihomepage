@@ -10,6 +10,9 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "The AI Homepage - Your Daily AI News Aggregator",
   description: "Stay updated with the latest AI news from Reddit, TechCrunch, Hacker News, and Startupper.gr. All in one place.",
+  icons: {
+    icon: '/logo-2.ico',
+  },
 };
 
 export default function RootLayout({

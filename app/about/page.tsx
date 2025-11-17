@@ -39,6 +39,9 @@ export default function About() {
                 vaggelis98.work@gmail.com
               </a>
             </p>
+
+
+            <p className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Made with ♥️ in Greece</p>
           </div>
         </div>
       </main>

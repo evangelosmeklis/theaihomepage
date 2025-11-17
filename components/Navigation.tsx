@@ -14,12 +14,15 @@ export function Navigation() {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <div className="flex-1">
-            <Link href="/" className="block hover:scale-105 transition-transform duration-300">
-              <div className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                the ai homepage
-              </div>
-              <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                a piece of AI news history
+            <Link href="/" className="flex items-center gap-3 hover:scale-105 transition-transform duration-300">
+              <img src="/logo.png" alt="Logo" className="w-10 h-10" />
+              <div>
+                <div className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  the ai homepage
+                </div>
+                <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                  a piece of AI news history
+                </div>
               </div>
             </Link>
           </div>
