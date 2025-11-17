@@ -1,11 +1,12 @@
 import { Navigation } from '@/components/Navigation';
+import { Footer } from '@/components/Footer';
 
 export default function About() {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors flex flex-col">
       <Navigation />
 
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-1">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-8">about</h1>
 
         <div className="text-gray-600 dark:text-gray-300 space-y-6 leading-relaxed">
@@ -45,6 +46,8 @@ export default function About() {
           </div>
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 }
