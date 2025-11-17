@@ -1,36 +1,130 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# The AI Homepage
+
+A modern AI news aggregator that pulls the latest articles from multiple sources into one clean, easy-to-read interface.
+
+## Features
+
+- **Multi-Source Aggregation**: Fetches news from:
+  - Reddit (r/artificial, r/MachineLearning, r/OpenAI, r/ChatGPT, r/LocalLLaMA, r/StableDiffusion)
+  - TechCrunch AI category
+  - Hacker News
+  - Startupper.gr
+
+- **Clean UI**: Modern, responsive design with Tailwind CSS
+- **Source Filtering**: Filter articles by source with one click
+- **Auto-Refresh**: News updates every 5 minutes
+- **Score & Comments**: See popularity metrics from Reddit and Hacker News
+- **Timestamps**: Human-readable relative timestamps for all articles
+
+## Tech Stack
+
+- **Framework**: Next.js 16 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Data Fetching**:
+  - Reddit JSON API
+  - RSS feeds (TechCrunch, Startupper.gr)
+  - Hacker News API
 
 ## Getting Started
 
-First, run the development server:
+### Development
 
+1. Install dependencies:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Run the development server:
+```bash
+npm run dev
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Production
 
-## Learn More
+Build for production:
+```bash
+npm run build
+npm start
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Deployment
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Vercel (Recommended)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Push your code to GitHub
+2. Import the project in [Vercel](https://vercel.com)
+3. Deploy with one click
 
-## Deploy on Vercel
+### Other Platforms
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This is a standard Next.js app and can be deployed to:
+- Netlify
+- Railway
+- AWS Amplify
+- Any Node.js hosting platform
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Configuration
+
+### Adding More Subreddits
+
+Edit `lib/fetchers/reddit.ts` and add subreddit names to the `SUBREDDITS` array:
+
+```typescript
+const SUBREDDITS = [
+  'artificial',
+  'MachineLearning',
+  // Add more here
+];
+```
+
+### Adjusting Cache Time
+
+The news is cached for 5 minutes by default. To change this, edit the `revalidate` value in:
+- `app/api/news/route.ts`
+- Individual fetcher files
+
+### Customizing Feed Limits
+
+Each fetcher has a default limit for the number of articles. Adjust these in `lib/fetchers/index.ts`:
+
+```typescript
+const [reddit, techcrunch, hackernews, startupper] = await Promise.all([
+  fetchRedditPosts(30),  // Adjust these numbers
+  fetchTechCrunchPosts(20),
+  fetchHackerNewsPosts(30),
+  fetchStartupperPosts(15)
+]);
+```
+
+## Project Structure
+
+```
+theaihomepage/
+├── app/
+│   ├── api/news/route.ts    # API endpoint for aggregated news
+│   ├── layout.tsx            # Root layout with metadata
+│   └── page.tsx              # Main homepage
+├── components/
+│   ├── NewsCard.tsx          # Individual news item component
+│   └── SourceFilter.tsx      # Source filtering component
+├── lib/
+│   ├── types.ts              # TypeScript interfaces
+│   └── fetchers/
+│       ├── reddit.ts         # Reddit API fetcher
+│       ├── techcrunch.ts     # TechCrunch RSS fetcher
+│       ├── hackernews.ts     # Hacker News API fetcher
+│       ├── startupper.ts     # Startupper RSS fetcher
+│       └── index.ts          # Aggregation logic
+└── package.json
+```
+
+## License
+
+MIT
+
+## Contributing
+
+Feel free to open issues or submit PRs to improve the aggregator!
