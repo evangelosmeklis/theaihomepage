@@ -22,10 +22,33 @@ A modern AI news aggregator that pulls the latest articles from multiple sources
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
 - **Data Fetching**:
-  - Reddit RSS feeds
+  - Reddit JSON API (client-side, bypasses Vercel IP blocks)
   - TechCrunch RSS feed
   - Startupper.gr RSS feed
   - Hacker News API
+- **Hybrid Loading**: Server-side pre-rendering for fast initial load, client-side Reddit fetching to avoid blocks
+
+## Architecture
+
+### Why Client-Side Reddit?
+
+Reddit blocks cloud hosting providers (including Vercel) by IP address. To solve this:
+
+**Server-Side (Build Time)**
+- ✅ Fetches TechCrunch, HackerNews, Startupper
+- ❌ Skips Reddit (would be blocked)
+
+**Client-Side (Runtime)**
+- ✅ Fetches Reddit from user's browser
+- ✅ Uses localStorage for 10-minute caching
+- ✅ Bypasses Vercel IP blocks completely
+
+**User Experience:**
+1. Page loads with TechCrunch/HackerNews/Startupper instantly
+2. Reddit posts load 2-3 seconds later and merge seamlessly
+3. Subsequent loads are instant (cached)
+
+No configuration or environment variables required!
 
 ## Getting Started
 
@@ -59,7 +82,7 @@ npm start
 2. Import the project in [Vercel](https://vercel.com)
 3. Deploy with one click - no environment variables needed!
 
-> ✅ **Note**: This app uses Reddit's RSS feeds which don't require authentication and work seamlessly on Vercel.
+> ✅ **Note**: Reddit posts are fetched client-side (from user browsers) to bypass Vercel IP blocks. This requires no configuration and provides a seamless experience!
 
 ### Other Platforms
 

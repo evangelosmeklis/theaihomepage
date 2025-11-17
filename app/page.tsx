@@ -6,6 +6,7 @@ import { NewsCard } from '@/components/NewsCard';
 import { Navigation } from '@/components/Navigation';
 import { SourceFilter } from '@/components/SourceFilter';
 import { Footer } from '@/components/Footer';
+import { fetchRedditPostsClient } from '@/lib/fetchers/reddit-client';
 
 export default function Home() {
   const [news, setNews] = useState<NewsItem[]>([]);
@@ -13,21 +14,39 @@ export default function Home() {
   const [selectedSources, setSelectedSources] = useState<Set<string>>(new Set());
   const [sortBy, setSortBy] = useState<'newest' | 'top'>('newest');
   const [loading, setLoading] = useState(true);
+  const [redditLoading, setRedditLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchNews() {
       try {
         setLoading(true);
+        
+        // Fetch server-side news (TechCrunch, HackerNews, Startupper)
         const response = await fetch('/api/news');
         if (!response.ok) throw new Error('Failed to fetch news');
-        const data = await response.json();
-        setNews(data);
-        setFilteredNews(data);
+        const serverData = await response.json();
+        setNews(serverData);
+        setFilteredNews(serverData);
+        setLoading(false);
+        
+        // Fetch Reddit client-side (to bypass Vercel IP blocks)
+        setRedditLoading(true);
+        try {
+          const redditPosts = await fetchRedditPostsClient(30);
+          const combinedNews = [...serverData, ...redditPosts];
+          setNews(combinedNews);
+          setFilteredNews(combinedNews);
+        } catch (redditErr) {
+          console.error('Failed to fetch Reddit posts:', redditErr);
+          // Continue without Reddit posts
+        } finally {
+          setRedditLoading(false);
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred');
-      } finally {
         setLoading(false);
+        setRedditLoading(false);
       }
     }
 
@@ -115,6 +134,15 @@ export default function Home() {
             <div className="relative">
               <div className="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 dark:border-gray-700"></div>
               <div className="animate-spin rounded-full h-16 w-16 border-4 border-transparent border-t-blue-500 border-r-purple-500 absolute top-0 left-0"></div>
+            </div>
+          </div>
+        )}
+
+        {!loading && redditLoading && (
+          <div className="mb-4 text-center">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-lg">
+              <div className="animate-spin rounded-full h-4 w-4 border-2 border-blue-500 border-t-transparent"></div>
+              <span className="text-sm">Loading Reddit posts...</span>
             </div>
           </div>
         )}
