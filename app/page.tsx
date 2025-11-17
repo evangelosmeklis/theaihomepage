@@ -67,14 +67,20 @@ export default function Home() {
 
   const handleToggleSource = (source: string) => {
     if (source === 'all') {
+      // Clear all filters
       setSelectedSources(new Set());
     } else {
-      const newSelected = new Set(selectedSources);
-      if (newSelected.has(source)) {
-        newSelected.delete(source);
+      // Single-select behavior: only one source at a time
+      const newSelected = new Set<string>();
+
+      // If clicking the already selected source, deselect it (go back to 'all')
+      if (selectedSources.has(source)) {
+        // Set is already empty, so all sources will show
       } else {
+        // Select only this source
         newSelected.add(source);
       }
+
       setSelectedSources(newSelected);
     }
   };
