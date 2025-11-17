@@ -3,12 +3,35 @@ import { NewsItem } from '../types';
 
 const parser = new Parser();
 
-export async function fetchStartupperPosts(limit: number = 15): Promise<NewsItem[]> {
+// AI-related keywords to filter content (Greek and English)
+const AI_KEYWORDS = [
+  'ai', 'artificial intelligence', 'machine learning', 'ml', 'deep learning',
+  'neural network', 'gpt', 'llm', 'large language model', 'openai', 'anthropic',
+  'chatgpt', 'claude', 'gemini', 'copilot', 'midjourney', 'stable diffusion',
+  'transformer', 'generative', 'nlp', 'natural language',
+  // Greek keywords
+  'τεχνητή νοημοσύνη', 'μηχανική μάθηση'
+];
+
+function isAIRelated(title: string, content?: string): boolean {
+  const searchText = (title + ' ' + (content || '')).toLowerCase();
+  return AI_KEYWORDS.some(keyword => searchText.includes(keyword));
+}
+
+export async function fetchStartupperPosts(limit: number = 30): Promise<NewsItem[]> {
   try {
-    // Try the standard RSS feed URL
+    // Fetch more items than limit to account for filtering
     const feed = await parser.parseURL('https://startupper.gr/feed/');
 
-    const newsItems: NewsItem[] = feed.items.slice(0, limit).map((item, index) => ({
+    // Filter for AI-related content
+    const aiItems = feed.items.filter(item =>
+      isAIRelated(
+        item.title || '',
+        item.contentSnippet || item.content || ''
+      )
+    );
+
+    const newsItems: NewsItem[] = aiItems.slice(0, limit).map((item, index) => ({
       id: `startupper-${item.guid || index}`,
       title: item.title || 'Untitled',
       url: item.link || '',

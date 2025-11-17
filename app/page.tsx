@@ -3,12 +3,14 @@
 import { useEffect, useState } from 'react';
 import { NewsItem } from '@/lib/types';
 import { NewsCard } from '@/components/NewsCard';
+import { Navigation } from '@/components/Navigation';
 import { SourceFilter } from '@/components/SourceFilter';
 
 export default function Home() {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [filteredNews, setFilteredNews] = useState<NewsItem[]>([]);
   const [selectedSources, setSelectedSources] = useState<Set<string>>(new Set());
+  const [sortBy, setSortBy] = useState<'newest' | 'top'>('newest');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -32,12 +34,35 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (selectedSources.size === 0) {
-      setFilteredNews(news);
-    } else {
-      setFilteredNews(news.filter(item => selectedSources.has(item.source)));
+    let filtered = news;
+
+    // Filter by source
+    if (selectedSources.size > 0) {
+      filtered = filtered.filter(item => selectedSources.has(item.source));
     }
-  }, [selectedSources, news]);
+
+    // Sort
+    if (sortBy === 'newest') {
+      // Sort by date, newest first
+      filtered = [...filtered].sort((a, b) =>
+        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+      );
+    } else if (sortBy === 'top') {
+      // Filter for today and sort by score
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      filtered = [...filtered]
+        .filter(item => new Date(item.publishedAt) >= today)
+        .sort((a, b) => {
+          const scoreA = a.score || 0;
+          const scoreB = b.score || 0;
+          return scoreB - scoreA;
+        });
+    }
+
+    setFilteredNews(filtered);
+  }, [selectedSources, sortBy, news]);
 
   const handleToggleSource = (source: string) => {
     if (source === 'all') {
@@ -53,25 +78,21 @@ export default function Home() {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
-            The AI Homepage
-          </h1>
-          <p className="text-gray-600">
-            Your daily dose of AI news from across the web
-          </p>
-        </div>
-      </header>
+  const handleSortChange = (sort: 'newest' | 'top') => {
+    setSortBy(sort);
+  };
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
+      <Navigation />
+
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-8">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Filter by source:</h2>
           <SourceFilter
             selectedSources={selectedSources}
             onToggleSource={handleToggleSource}
+            sortBy={sortBy}
+            onSortChange={handleSortChange}
           />
         </div>
 
@@ -89,31 +110,24 @@ export default function Home() {
 
         {!loading && !error && (
           <>
-            <div className="mb-4 text-sm text-gray-600">
-              Showing {filteredNews.length} articles
-            </div>
-
-            <div className="space-y-6">
-              {filteredNews.map((item) => (
-                <NewsCard key={item.id} item={item} />
-              ))}
-            </div>
-
-            {filteredNews.length === 0 && (
+            {filteredNews.length === 0 && sortBy === 'top' && (
+              <div className="text-center py-20 text-gray-500">
+                No articles from today with scores available. Try "newest" to see all articles.
+              </div>
+            )}
+            {filteredNews.length === 0 && sortBy === 'newest' && (
               <div className="text-center py-20 text-gray-500">
                 No articles found for the selected filters.
               </div>
             )}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredNews.map((item) => (
+                <NewsCard key={item.id} item={item} />
+              ))}
+            </div>
           </>
         )}
       </main>
-
-      <footer className="bg-white border-t border-gray-200 mt-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center text-gray-600">
-          <p>Aggregating news from Reddit, TechCrunch, Hacker News, and Startupper.gr</p>
-          <p className="text-sm mt-2">Updates every 5 minutes</p>
-        </div>
-      </footer>
     </div>
   );
 }
