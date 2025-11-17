@@ -35,10 +35,10 @@ export function SourceFilter({ selectedSources, onToggleSource, sortBy, onSortCh
             <span key={source.id} className="flex items-center">
               <button
                 onClick={() => onToggleSource(source.id)}
-                className={`px-2 py-1 rounded transition-colors ${
+                className={`px-2 py-1 rounded transition-all duration-200 ${
                   isSelected
-                    ? 'text-gray-900 dark:text-gray-100 font-medium underline underline-offset-4'
-                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                    ? 'text-gray-900 dark:text-gray-100 font-medium underline underline-offset-4 scale-110'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:scale-105'
                 }`}
               >
                 {source.label}
@@ -61,10 +61,10 @@ export function SourceFilter({ selectedSources, onToggleSource, sortBy, onSortCh
           <span key={option.id} className="flex items-center">
             <button
               onClick={() => onSortChange(option.id as 'newest' | 'top')}
-              className={`px-2 py-1 rounded transition-colors ${
+              className={`px-2 py-1 rounded transition-all duration-200 ${
                 sortBy === option.id
-                  ? 'text-gray-900 dark:text-gray-100 font-medium underline underline-offset-4'
-                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                  ? 'text-gray-900 dark:text-gray-100 font-medium underline underline-offset-4 scale-110'
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:scale-105'
               }`}
             >
               {option.label}

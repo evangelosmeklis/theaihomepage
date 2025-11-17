@@ -6,10 +6,10 @@ interface NewsCardProps {
 }
 
 const sourceColors = {
-  reddit: 'bg-orange-500',
-  techcrunch: 'bg-green-500',
-  hackernews: 'bg-orange-600',
-  startupper: 'bg-blue-500'
+  reddit: 'bg-gradient-to-r from-orange-500 to-red-500',
+  techcrunch: 'bg-gradient-to-r from-green-500 to-emerald-500',
+  hackernews: 'bg-gradient-to-r from-orange-600 to-amber-600',
+  startupper: 'bg-gradient-to-r from-blue-500 to-cyan-500'
 };
 
 const sourceLabels = {
@@ -20,8 +20,15 @@ const sourceLabels = {
 };
 
 export function NewsCard({ item }: NewsCardProps) {
+  const isNew = (Date.now() - new Date(item.publishedAt).getTime()) < 3600000; // Less than 1 hour
+
   return (
-    <article className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-md transition-all h-full">
+    <article className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-xl hover:scale-[1.02] transition-all duration-300 h-full relative group">
+      {isNew && (
+        <span className="absolute -top-2 -right-2 bg-gradient-to-r from-pink-500 to-purple-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg animate-pulse z-10">
+          NEW
+        </span>
+      )}
       <a
         href={item.url}
         target="_blank"
@@ -34,7 +41,7 @@ export function NewsCard({ item }: NewsCardProps) {
             <img
               src={item.thumbnail}
               alt={item.title}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               onError={(e) => {
                 e.currentTarget.parentElement!.style.display = 'none';
               }}
@@ -53,7 +60,7 @@ export function NewsCard({ item }: NewsCardProps) {
             )}
           </div>
 
-          <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-2 line-clamp-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+          <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-2 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-all duration-300">
             {item.title}
           </h2>
 
