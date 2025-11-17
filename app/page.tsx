@@ -49,17 +49,24 @@ export default function Home() {
         new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
       );
     } else if (sortBy === 'top') {
-      // Filter for today and sort by score
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-
-      filtered = [...filtered]
-        .filter(item => new Date(item.publishedAt) >= today)
-        .sort((a, b) => {
-          const scoreA = a.score || 0;
-          const scoreB = b.score || 0;
+      // Sort by score (highest first)
+      // For sources without scores, use date as fallback
+      filtered = [...filtered].sort((a, b) => {
+        const scoreA = a.score || 0;
+        const scoreB = b.score || 0;
+        
+        // If both have scores, sort by score
+        if (scoreA > 0 && scoreB > 0) {
           return scoreB - scoreA;
-        });
+        }
+        
+        // If only one has a score, prioritize it
+        if (scoreA > 0) return -1;
+        if (scoreB > 0) return 1;
+        
+        // If neither has a score, sort by date
+        return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
+      });
     }
 
     setFilteredNews(filtered);
@@ -120,12 +127,7 @@ export default function Home() {
 
         {!loading && !error && (
           <>
-            {filteredNews.length === 0 && sortBy === 'top' && (
-              <div className="text-center py-20 text-gray-500">
-                No articles from today with scores available. Try "newest" to see all articles.
-              </div>
-            )}
-            {filteredNews.length === 0 && sortBy === 'newest' && (
+            {filteredNews.length === 0 && (
               <div className="text-center py-20 text-gray-500">
                 No articles found for the selected filters.
               </div>

@@ -10,4 +10,5 @@ export interface NewsItem {
   score?: number;
   commentsCount?: number;
   thumbnail?: string;
+  redditSortType?: 'hot' | 'top'; // Which Reddit feed this came from
 }
