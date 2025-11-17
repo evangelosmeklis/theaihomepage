@@ -61,15 +61,20 @@ export default function Home() {
       filtered = filtered.filter(item => selectedSources.has(item.source));
     }
 
+    // Filter for posts from the last 24 hours only (for both newest and top)
+    const oneDayAgo = new Date();
+    oneDayAgo.setHours(oneDayAgo.getHours() - 24);
+    
+    filtered = filtered.filter(item => new Date(item.publishedAt) >= oneDayAgo);
+
     // Sort
     if (sortBy === 'newest') {
-      // Sort by date, newest first
+      // Sort by date, newest first (hot posts of today)
       filtered = [...filtered].sort((a, b) =>
         new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
       );
     } else if (sortBy === 'top') {
-      // Sort by score (highest first)
-      // For sources without scores, use date as fallback
+      // Sort by score, highest first (top posts of today)
       filtered = [...filtered].sort((a, b) => {
         const scoreA = a.score || 0;
         const scoreB = b.score || 0;
@@ -156,8 +161,9 @@ export default function Home() {
         {!loading && !error && (
           <>
             {filteredNews.length === 0 && (
-              <div className="text-center py-20 text-gray-500">
-                No articles found for the selected filters.
+              <div className="text-center py-20 text-gray-500 dark:text-gray-400">
+                <p className="mb-2">No articles from the last 24 hours found.</p>
+                <p className="text-sm">Check back soon for fresh content!</p>
               </div>
             )}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
