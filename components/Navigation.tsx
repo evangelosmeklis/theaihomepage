@@ -2,11 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useSession, signOut } from 'next-auth/react';
 import { useDarkMode } from '@/hooks/useDarkMode';
 
 export function Navigation() {
   const pathname = usePathname();
   const { isDark, toggle } = useDarkMode();
+  const { data: session } = useSession();
 
   return (
     <nav className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 transition-colors">
@@ -28,7 +30,7 @@ export function Navigation() {
           </div>
 
           {/* Centered Navigation */}
-          <div className="flex-1 flex justify-center gap-6 sm:gap-12">
+          <div className="flex-1 flex justify-center gap-4 sm:gap-8">
             <Link
               href="/"
               className={`text-sm sm:text-base font-medium transition-colors ${
@@ -38,6 +40,16 @@ export function Navigation() {
               }`}
             >
               home
+            </Link>
+            <Link
+              href="/posts"
+              className={`text-sm sm:text-base font-medium transition-colors ${
+                pathname?.startsWith('/posts')
+                  ? 'text-gray-900 dark:text-gray-100'
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'
+              }`}
+            >
+              posts
             </Link>
             <Link
               href="/about"
@@ -51,8 +63,28 @@ export function Navigation() {
             </Link>
           </div>
 
-          {/* Dark Mode Toggle */}
-          <div className="flex-1 flex justify-end">
+          {/* User Menu & Dark Mode Toggle */}
+          <div className="flex-1 flex justify-end items-center gap-2 sm:gap-4">
+            {session ? (
+              <>
+                <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 hidden sm:inline">
+                  {session.user.username}
+                </span>
+                <button
+                  onClick={() => signOut({ callbackUrl: '/' })}
+                  className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+                >
+                  sign out
+                </button>
+              </>
+            ) : (
+              <Link
+                href="/signin"
+                className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+              >
+                sign in
+              </Link>
+            )}
             <button
               onClick={toggle}
               className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors touch-manipulation"

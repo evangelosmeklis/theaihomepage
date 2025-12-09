@@ -1,0 +1,75 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  posts     Post[]
+  comments  Comment[]
+  votes     Vote[]
+}
+
+model Post {
+  id          String   @id @default(cuid())
+  title       String
+  url         String?
+  content     String?
+  points      Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  userId      String
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comments    Comment[]
+  votes       Vote[]
+
+  @@index([createdAt])
+  @@index([points])
+}
+
+model Comment {
+  id          String   @id @default(cuid())
+  content     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  userId      String
+  postId      String
+  parentId    String?
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post        Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  parent      Comment?  @relation("CommentToComment", fields: [parentId], references: [id], onDelete: Cascade)
+  replies     Comment[] @relation("CommentToComment")
+
+  @@index([postId])
+  @@index([parentId])
+}
+
+model Vote {
+  id        String   @id @default(cuid())
+  userId    String
+  postId    String
+  value     Int      // 1 for upvote, -1 for downvote
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+  @@index([postId])
+}
